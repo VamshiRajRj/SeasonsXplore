@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from 'react';
 import { useLocation } from './LocationProvider';
+import { getRecommendations } from '@/services/recommendationsService';
 
 // Types for our recommendation data
 export interface Recommendation {
@@ -296,7 +297,6 @@ export const RecommendationsProvider: React.FC<
             interests: ['Cafes', 'Chill', 'Indoor'],
           },
         ];
-
         setRecommendations(mockRecommendations);
         setFilteredRecommendations(mockRecommendations);
       }

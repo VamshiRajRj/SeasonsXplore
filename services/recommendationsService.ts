@@ -2,10 +2,8 @@
 
 import OpenAI from 'openai';
 
-const OPENTRIPMAP_API_KEY =
-  '5ae2e3f221c38a28845f05b6777e701f03e4e6458061347638559160';
-const OPENAI_API_KEY =
-  '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';
+const OPENTRIPMAP_API_KEY = process.env.OPENTRIPMAP_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 const openai = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
@@ -78,108 +76,108 @@ export const getRecommendations = async (
 
     console.log('Places:', places);
 
-    const enrichedPlaces = await Promise.all(
-      places.features.map(async (place: any) => {
-        const xid = place.properties.xid;
+    // const enrichedPlaces = await Promise.all(
+    //   places.features.map(async (place: any) => {
+    //     const xid = place.properties.xid;
 
-        // Fetch detailed info for each place
-        const detailRes = await fetch(
-          `https://api.opentripmap.com/0.1/en/places/xid/${xid}?apikey=${OPENTRIPMAP_API_KEY}`
-        );
-        const detail = await detailRes.json();
+    //     // Fetch detailed info for each place
+    //     const detailRes = await fetch(
+    //       `https://api.opentripmap.com/0.1/en/places/xid/${xid}?apikey=${OPENTRIPMAP_API_KEY}`
+    //     );
+    //     const detail = await detailRes.json();
 
-        console.log('Detail:', detail);
-        if (detail.error) {
-          return {
-            address: {
-              city: 'San Jose',
-              country: 'United States of America',
-              country_code: 'us',
-              county: 'Santa Clara County',
-              footway: 'Fairmont Plaza',
-              neighbourhood: 'Downtown Historic District',
-              postcode: '95113',
-              state: 'California',
-              suburb: 'Japantown',
-            },
-            image: 'https://commons.wikimedia.org/wiki/File:KnightRidder.JPG',
-            kinds: 'skyscrapers,architecture,interesting_places',
-            name: 'Fairmont Plaza',
-            otm: 'https://opentripmap.com/en/card/Q14681964',
-            point: { lat: 37.33359909057617, lon: -121.88919830322266 },
-            preview: {
-              height: 400,
-              source:
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/KnightRidder.JPG/300px-KnightRidder.JPG',
-              width: 300,
-            },
-            rate: '3',
-            sources: { attributes: ['wikidata'], geometry: 'wikidata' },
-            wikidata: 'Q14681964',
-            wikipedia: 'https://en.wikipedia.org/wiki/Fairmont%20Plaza',
-            wikipedia_extracts: {
-              html: "<p><b>Fairmont Plaza</b> (previously the <b>Knight-Ridder Building</b>) is a 17-story, 79.55&nbsp;m (261.0&nbsp;ft) skyscraper in downtown San Jose, California. When completed in 1988, it was the tallest building in the city; it is currently the sixth. The building was designed by the Skidmore, Owings &amp; Merrill architecture firm.</p><p>Fairmont Plaza was completed in 1988. At the time, it was the tallest building in San Jose. San Jose's first skyscraper, the 1909, seven-story, Garden City Bank &amp; Trust Building, and the 1926, seven-story, American Trust Building were razed on the site to make way for the project.</p>",
-              text: "Fairmont Plaza (previously the Knight-Ridder Building) is a 17-story, 79.55 m (261.0 ft) skyscraper in downtown San Jose, California. When completed in 1988, it was the tallest building in the city; it is currently the sixth. The building was designed by the Skidmore, Owings & Merrill architecture firm.Fairmont Plaza was completed in 1988. At the time, it was the tallest building in San Jose. San Jose's first skyscraper, the 1909, seven-story, Garden City Bank & Trust Building, and the 1926, seven-story, American Trust Building were razed on the site to make way for the project.",
-              title: 'en:Fairmont Plaza',
-            },
-            xid: 'Q14681964',
-          };
-        }
+    //     console.log('Detail:', detail);
+    //     if (detail.error) {
+    //       return {
+    //         address: {
+    //           city: 'San Jose',
+    //           country: 'United States of America',
+    //           country_code: 'us',
+    //           county: 'Santa Clara County',
+    //           footway: 'Fairmont Plaza',
+    //           neighbourhood: 'Downtown Historic District',
+    //           postcode: '95113',
+    //           state: 'California',
+    //           suburb: 'Japantown',
+    //         },
+    //         image: 'https://commons.wikimedia.org/wiki/File:KnightRidder.JPG',
+    //         kinds: 'skyscrapers,architecture,interesting_places',
+    //         name: 'Fairmont Plaza',
+    //         otm: 'https://opentripmap.com/en/card/Q14681964',
+    //         point: { lat: 37.33359909057617, lon: -121.88919830322266 },
+    //         preview: {
+    //           height: 400,
+    //           source:
+    //             'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/KnightRidder.JPG/300px-KnightRidder.JPG',
+    //           width: 300,
+    //         },
+    //         rate: '3',
+    //         sources: { attributes: ['wikidata'], geometry: 'wikidata' },
+    //         wikidata: 'Q14681964',
+    //         wikipedia: 'https://en.wikipedia.org/wiki/Fairmont%20Plaza',
+    //         wikipedia_extracts: {
+    //           html: "<p><b>Fairmont Plaza</b> (previously the <b>Knight-Ridder Building</b>) is a 17-story, 79.55&nbsp;m (261.0&nbsp;ft) skyscraper in downtown San Jose, California. When completed in 1988, it was the tallest building in the city; it is currently the sixth. The building was designed by the Skidmore, Owings &amp; Merrill architecture firm.</p><p>Fairmont Plaza was completed in 1988. At the time, it was the tallest building in San Jose. San Jose's first skyscraper, the 1909, seven-story, Garden City Bank &amp; Trust Building, and the 1926, seven-story, American Trust Building were razed on the site to make way for the project.</p>",
+    //           text: "Fairmont Plaza (previously the Knight-Ridder Building) is a 17-story, 79.55 m (261.0 ft) skyscraper in downtown San Jose, California. When completed in 1988, it was the tallest building in the city; it is currently the sixth. The building was designed by the Skidmore, Owings & Merrill architecture firm.Fairmont Plaza was completed in 1988. At the time, it was the tallest building in San Jose. San Jose's first skyscraper, the 1909, seven-story, Garden City Bank & Trust Building, and the 1926, seven-story, American Trust Building were razed on the site to make way for the project.",
+    //           title: 'en:Fairmont Plaza',
+    //         },
+    //         xid: 'Q14681964',
+    //       };
+    //     }
 
-        const baseDescription =
-          detail.wikipedia_extracts?.text ||
-          detail.info?.descr ||
-          'No description available.';
+    //     const baseDescription =
+    //       detail.wikipedia_extracts?.text ||
+    //       detail.info?.descr ||
+    //       'No description available.';
 
-        const prompt = generatePrompt({
-          name: detail.name,
-          baseDescription,
-          weather,
-          timeOfDay,
-          month,
-          transportMode,
-          interests,
-        });
+    //     const prompt = generatePrompt({
+    //       name: detail.name,
+    //       baseDescription,
+    //       weather,
+    //       timeOfDay,
+    //       month,
+    //       transportMode,
+    //       interests,
+    //     });
 
-        // Generate contextual description using OpenAI
-        const completion = await openai.chat.completions.create({
-          model: 'deepseek/deepseek-chat-v3-0324:free',
-          messages: [
-            { role: 'system', content: 'You are a helpful travel assistant.' },
-            { role: 'user', content: prompt },
-          ],
-        });
+    //     // Generate contextual description using OpenAI
+    //     const completion = await openai.chat.completions.create({
+    //       model: 'deepseek/deepseek-chat-v3-0324:free',
+    //       messages: [
+    //         { role: 'system', content: 'You are a helpful travel assistant.' },
+    //         { role: 'user', content: prompt },
+    //       ],
+    //     });
 
-        console.log(completion.choices[0].message);
+    //     console.log(completion.choices[0].message);
 
-        const generatedDescription =
-          completion.choices[0].message?.content?.trim() || baseDescription;
-        console.log(detail);
-        return {
-          id: xid,
-          name: detail.name,
-          description: generatedDescription,
-          image:
-            detail.preview?.source || 'https://via.placeholder.com/400x300',
-          distance: `${(place.properties.dist / 1000).toFixed(1)} km`,
-          tags: detail.kinds?.split(',').map((k: string) => k.trim()) || [],
-          rating: 4.2 + Math.random() * 0.5,
-          reviews: Math.floor(Math.random() * 1000),
-          priceLevel: 'Free',
-          openingHours: detail.properties?.opening_hours || 'Varies',
-          coordinates: {
-            latitude: detail?.point?.lat || latitude,
-            longitude: detail?.point?.lon || longitude,
-          },
-          category: detail.kinds?.split(',')[0] || 'General',
-          timeOfDay: ['Morning', 'Afternoon', 'Evening'],
-          transportModes: ['Walking', 'Public Transport'],
-          interests,
-        };
-      })
-    );
+    //     const generatedDescription =
+    //       completion.choices[0].message?.content?.trim() || baseDescription;
+    //     console.log(detail);
+    //     return {
+    //       id: xid,
+    //       name: detail.name,
+    //       description: generatedDescription,
+    //       image:
+    //         detail.preview?.source || 'https://via.placeholder.com/400x300',
+    //       distance: `${(place.properties.dist / 1000).toFixed(1)} km`,
+    //       tags: detail.kinds?.split(',').map((k: string) => k.trim()) || [],
+    //       rating: 4.2 + Math.random() * 0.5,
+    //       reviews: Math.floor(Math.random() * 1000),
+    //       priceLevel: 'Free',
+    //       openingHours: detail.properties?.opening_hours || 'Varies',
+    //       coordinates: {
+    //         latitude: detail?.point?.lat || latitude,
+    //         longitude: detail?.point?.lon || longitude,
+    //       },
+    //       category: detail.kinds?.split(',')[0] || 'General',
+    //       timeOfDay: ['Morning', 'Afternoon', 'Evening'],
+    //       transportModes: ['Walking', 'Public Transport'],
+    //       interests,
+    //     };
+    //   })
+    // );
 
-    return enrichedPlaces;
+    return places;
   } catch (error) {
     console.error('Error fetching recommendations:', error);
     return [];
